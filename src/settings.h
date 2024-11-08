@@ -6,10 +6,8 @@
 struct Settings {
   char ssid[32];
   char password[32];
-  char mqtt_server[32];
-  char mqtt_user[32];
-  char mqtt_password[32];
-  char device_name[32];
+  int work_pin;
+  int led_count;
 };
 
 extern Settings settings;
