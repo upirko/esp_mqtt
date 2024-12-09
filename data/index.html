@@ -1,37 +1,27 @@
 <html>
   <head>
-    <link rel="stylesheet" href="/style.css">
-    <script>
-      function send() {
-        const data = {
-          index: document.getElementById("index").value,
-          color: document.getElementById("color").value,
-        }
-        fetch('/data', {
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify(data)
-        });
-      }
-    </script>
+    <link rel="stylesheet" href="./style.css">
   </head>
   <body>
-    <div class="app">
-      <h1>App</h1>
-      <div>
-        <label>
-          Index:
-          <input type="number" id="index" />
-        </label>
-        <label>
-          Color:
-          <input type="color" id="color" />
-        </label>
-        <button onclick="send()">Send</button>
+    <div class="app" x-data="setup()" x-init="init()" @mouseup="isMouseDown = false">
+      <div class="grid" :style="{'--cols': width, '--rows': height}" @mousedown="isMouseDown = true">
+        <template x-for="(cell, index) in data">
+          <div class="cell" :style="{'--bg': `rgb(${cell[0]}, ${cell[1]}, ${cell[2]})`}" @mousedown="setColor(index, true)" @mouseenter="setColor(index)"></div>
+        </template>
+      </div>
+      <div class="controls">
+        <div>
+          <input type="color" :value="rgbToHex(color)" @change="changeColor($event)" />
+        </div>
+        <div>
+          <button @click="init()">Clear</button>
+        </div>
+        <div>
+          <button @click="send()">Send</button>
+        </div>
       </div>
     </div>
+    <script src="./app.js"></script>
+    <script src="./apline.min.js"></script>
   </body>
 </html>

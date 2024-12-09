@@ -6,8 +6,6 @@
 struct Settings {
   char ssid[32];
   char password[32];
-  int work_pin;
-  int led_count;
 };
 
 extern Settings settings;

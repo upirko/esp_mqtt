@@ -1,13 +1,15 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
+#include <FastLED.h>
 #include "settings.h"
 #include "webserver.h"
 
 WiFiClient espClient;
-Adafruit_NeoPixel strip;
 boolean ready = false;
+
+#define NUM_LEDS 256
+CRGB leds[NUM_LEDS];
 
 void setupMode() {
   Serial.println("Setup mode: Connect to WiFi setup network and visit IP address in browser.");
@@ -42,13 +44,6 @@ bool connectToWiFi() {
   }
 }
 
-// unsigned long hexToDec(const char* hex) {
-//   if (hex[0] == '#') {
-//     hex++;
-//   }
-//   return strtoul(hex, NULL, 16);
-// }
-
 void handleData() {
   if (!server.hasArg("plain")) {
     server.send (400, "application/json", "{\"success\":false}");
@@ -65,8 +60,15 @@ void handleData() {
     return;
   }
 
-  // strip.setPixelColor(data["index"], hexToDec(data["color"]));
-  // strip.show();
+  JsonArray pixs = data["data"];
+
+  for (size_t i = 0; i < pixs.size(); i++) {
+    JsonArray pix = pixs[i];
+    CRGB color = CRGB(pix[0], pix[1], pix[2]);
+    leds[i] = color;
+  }
+  FastLED.show();
+
   server.send ( 200, "text/json", "{\"success\":true}" );
 }
 
@@ -87,14 +89,9 @@ void setup() {
   }
 
   setupWebServer();
-  if (ready) {
-    server.on("/data", HTTP_POST, handleData);
-  }
-
-  strip = Adafruit_NeoPixel(settings.led_count, settings.work_pin, NEO_GRB + NEO_KHZ800);
-  strip.begin(); 
-  strip.setBrightness(50);
-  strip.show();
+  server.on("/data", HTTP_POST, handleData);
+  
+  FastLED.addLeds<WS2811, 2, RGB>(leds, NUM_LEDS);
 }
 
 void loop() {

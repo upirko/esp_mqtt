@@ -23,8 +23,6 @@ void handleRoot() {
   String form = "<form method='post' action='/settings/save'>"
               "SSID:<br><input type='text' name='ssid' value='" + String(settings.ssid) + "'><br>"
               "Password:<br><input type='password' name='password' value='" + String(settings.password) + "'><br>"
-              "Work pin:<br><input type='number' name='work_pin' value='" + String(settings.work_pin) + "'><br>"
-              "Led count:<br><input type='number' name='led_count' value='" + String(settings.led_count) + "'><br>"
               "<input type='submit' value='Save'></form>";
 
   server.send(200, "text/html", form);
@@ -36,8 +34,6 @@ void handleSave() {
 
   server.arg("ssid").toCharArray(settings.ssid, sizeof(settings.ssid));
   server.arg("password").toCharArray(settings.password, sizeof(settings.password));
-  settings.work_pin = server.arg("work_pin").toInt();
-  settings.led_count = server.arg("led_count").toInt();
   
   saveSettings();
 

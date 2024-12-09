@@ -2,6 +2,38 @@ html, body {
   margin: 0;
   padding: 0;
 }
-label {
-  display: block;
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  padding: 10px;
+  display: flex;
+  gap: 20px;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.grid {
+  --cols: 10;
+  --rows: 10;
+  --cell-size: 50px;
+  display: grid;
+  width: calc(var(--cell-size) * var(--cols));
+  height: calc(var(--cell-size) * var(--rows));
+  grid-template-columns: repeat(var(--cols), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+}
+.grid .cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: 1px solid #ccc;
+  background-color: var(--bg);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
